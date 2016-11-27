@@ -1,0 +1,22 @@
+-import com.innopolis.ir.web.QueryResult
+-@ val result : List[QueryResult]
+-@ val query : String
+
+div.content
+    form(action="/" method="get")
+        input.search(type="text" name="query" value=query autofocus)
+        input(type="submit" value="Search")
+
+    - if(result.isEmpty && query.nonEmpty)
+        div
+            p Your query did not match any documents.
+
+    - if(result.nonEmpty)
+        div
+            - for (res <- result)
+                div
+                    h3
+                        a(href="#{res.url}") #{res.title}
+                    div
+                        cite #{res.url}
+                    span Tags: #{res.tags}
