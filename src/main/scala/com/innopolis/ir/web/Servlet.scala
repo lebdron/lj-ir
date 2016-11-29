@@ -35,7 +35,7 @@ class Servlet extends Stack {
         query = tolerantRetrieval.replaceMissingTerms(query)
         result = freeTextRetrieval.executeQuery(query).toList
           .sortWith(_.asInstanceOf[TfIdfDocumentPosition].weight > _.asInstanceOf[TfIdfDocumentPosition].weight)
-          .take(10)
+          .take(100)
           .map(e => new QueryResult(e.asInstanceOf[TfIdfDocumentPosition].file))
       }
       else {

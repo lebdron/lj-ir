@@ -12,7 +12,7 @@ import scala.io.Source
 
 object LJCrawlerApp {
   val timeout = 1000 * 30
-  val directory = "data/livejournal"
+  val directory = "data/lj"
   val userAgent = "Bot - a.lebedev@innopolis.ru"
   val sleep = 200 // 5 actions per sec
   var processedCount = 0

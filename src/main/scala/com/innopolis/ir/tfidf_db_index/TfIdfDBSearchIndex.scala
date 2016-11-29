@@ -84,6 +84,11 @@ class TfIdfDBSearchIndex extends SearchIndex {
         docFrequencies += (term -> DocFrequency(id, freq))
     }), Duration.Inf)
 
+    documentIds.clear()
+    Await.result(db.run(documents.result)
+      .map(_.foreach{ e =>
+        documentIds.put(e._2, e._1)
+      }), Duration.Inf)
     totalDocs = Await.result(db.run(documents.length.result), Duration.Inf)
   }
 
@@ -144,7 +149,7 @@ class TfIdfDBSearchIndex extends SearchIndex {
   }
 
 //  var cachedFilenameId = "" -> 0
-  var lastId = 0
+//  var lastId = 0
   var positionsToAdd = ListBuffer[(Int, Int, Int, Double)]()
   // caching and buffering
   override def addPosition(term: String, position: SearchIndexPosition): Unit = {
@@ -160,19 +165,19 @@ class TfIdfDBSearchIndex extends SearchIndex {
       doc_id = Await.result(db.run(documents.filter(_.http === filename).map(t => t.id).result.head), Duration.Inf)
       cachedFilenameId = filename -> doc_id
     }*/
-    if (!documentIds.contains(filename)){
+    /*if (!documentIds.contains(filename)){
       documentIds.clear()
       Await.result(db.run(documents.filter(_.id > lastId).filter(_.id < lastId + bufferSize).result)
         .map(_.foreach{ e =>
           documentIds.put(e._2, e._1)
         }), Duration.Inf)
-    }
+    }*/
     doc_id = documentIds(filename)
 
     //insert (term_id, doc_id, weight)
     val weight = position.asInstanceOf[TfIdfDocumentPosition].weight
     positionsToAdd += ((0, term_id, doc_id, weight))
-    lastId = doc_id
+//    lastId = doc_id
   }
 
   def commitPositions() = {
